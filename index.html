@@ -97,7 +97,7 @@
     .nav-mobile { display: none; position: fixed; inset: 0; background: var(--dark); z-index: 99; padding: 100px 32px 40px; flex-direction: column; gap: 32px; }
     .nav-mobile.open { display: flex; }
     .nav-mobile a { font-size: 1.4rem; font-weight: 700; color: var(--white); border-bottom: 1px solid rgba(255,255,255,.1); padding-bottom: 20px; }
-    .nav-mobile .btn { align-self: flex-start; margin-top: 8px; }
+    .nav-mobile .btn { align-self: stretch; text-align: center; justify-content: center; margin-top: 8px; white-space: normal; }
 
     /* ════════════════════════════════
        HERO
@@ -116,7 +116,7 @@
     .hero h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); font-weight: 900; line-height: 1.1; color: var(--white); margin-bottom: 24px; letter-spacing: -.02em; }
     .hero h1 .accent { color: var(--accent); }
     .hero-sub { font-size: clamp(1rem, 2.5vw, 1.2rem); color: rgba(255,255,255,.75); max-width: 560px; margin-bottom: 40px; line-height: 1.7; }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 56px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 40px; }
     .hero-trust { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,.12); }
     .trust-item { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,.8); font-size: .9rem; font-weight: 500; }
     .trust-item svg { color: var(--accent); flex-shrink: 0; }
@@ -253,6 +253,61 @@
       .nav-links { display: none; }
       .nav-cta { display: none; }
       .nav-hamburger { display: flex; }
+    }
+
+    /* ════════════════════════════════
+       MOBILE FIXES (< 640px)
+    ════════════════════════════════ */
+    @media (max-width: 639px) {
+      /* Hero: weniger Top-Padding, damit alles passt */
+      .hero { padding: 96px 0 56px; }
+
+      /* Hero CTA: volle Breite, gestapelt, kein nowrap */
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-actions .btn {
+        width: 100%;
+        justify-content: center;
+        white-space: normal;
+        text-align: center;
+        line-height: 1.3;
+      }
+      /* btn-lg auf Mobile etwas kompakter */
+      .btn-lg { padding: 16px 24px; font-size: 1rem; }
+
+      /* Trust-Bar: Divider ausblenden, enger */
+      .trust-divider { display: none; }
+      .hero-trust { gap: 10px 14px; padding-top: 28px; }
+      .trust-item { font-size: .82rem; }
+
+      /* Hero Badge: Zeilenumbruch erlauben */
+      .hero-badge { white-space: normal; line-height: 1.4; }
+
+      /* Sections: etwas weniger vertikales Padding */
+      .section { padding: 64px 0; }
+      .section-header { margin-bottom: 36px; }
+
+      /* Step-Cards: weniger seitliches Padding */
+      .step { padding: 36px 20px 28px; }
+
+      /* USP-Cards: kompakter */
+      .usp-card { padding: 24px 20px; gap: 16px; }
+
+      /* Handwerker-Card: weniger Padding */
+      .handwerker-card { padding: 28px 20px; }
+
+      /* Kontakt-Formular: kleinere Innenabstände */
+      .contact-form { padding: 24px 20px; }
+
+      /* iOS-Zoom verhindern: Input-Schriftgröße mind. 16px */
+      .form-group input,
+      .form-group textarea,
+      .form-group select { font-size: 16px; }
+
+      /* Footer-Kontakt: korrekte Ausrichtung bei mehrzeiligem Text */
+      .footer-contact-item { align-items: flex-start; }
+
+      /* Sternebewertung im Footer: kleinere Schrift */
+      .footer-stars span:last-child { font-size: .78rem; }
     }
   </style>
 </head>
