@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuftragsGlück – Geprüfte Handwerker. Kostenlos & Schnell.</title>
+  <meta name="description" content="AuftragsGlück verbindet Auftraggeber mit geprüften Handwerkern und Dienstleistern – 100% kostenlos, transparent, deutschlandweit." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --primary: #0EA5E9;
+      --primary-dark: #0284C7;
+      --primary-darker: #0369A1;
+      --accent: #F97316;
+      --accent-dark: #EA580C;
+      --dark: #0F172A;
+      --dark-2: #1E293B;
+      --dark-3: #334155;
+      --mid: #64748B;
+      --light: #CBD5E1;
+      --bg: #F8FAFC;
+      --white: #FFFFFF;
+      --radius: 14px;
+      --radius-lg: 22px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow: 0 4px 16px rgba(0,0,0,.10);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,.14);
+      --transition: 0.25s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--dark); background: var(--white); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    img, svg { display: block; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+
+    /* ── Utilities ── */
+    .container { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+    .section { padding: 80px 0; }
+    .section-label { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--primary); background: rgba(14,165,233,.1); border-radius: 50px; padding: 5px 14px; margin-bottom: 16px; }
+    .section-title { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; line-height: 1.2; color: var(--dark); margin-bottom: 16px; }
+    .section-sub { font-size: 1.05rem; color: var(--mid); max-width: 560px; }
+    .section-header { margin-bottom: 56px; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-sub { margin: 0 auto; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 50px; font-size: 1rem; font-weight: 700; transition: var(--transition); white-space: nowrap; }
+    .btn-primary { background: var(--accent); color: var(--white); box-shadow: 0 4px 20px rgba(249,115,22,.35); }
+    .btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(249,115,22,.45); }
+    .btn-secondary { background: rgba(255,255,255,.15); color: var(--white); border: 2px solid rgba(255,255,255,.4); backdrop-filter: blur(8px); }
+    .btn-secondary:hover { background: rgba(255,255,255,.25); transform: translateY(-2px); }
+    .btn-outline { background: transparent; color: var(--primary-dark); border: 2px solid var(--primary-dark); }
+    .btn-outline:hover { background: var(--primary-dark); color: var(--white); transform: translateY(-2px); }
+    .btn-lg { padding: 18px 36px; font-size: 1.1rem; }
+
+    /* ── Scroll Animations ── */
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-delay-1 { transition-delay: .1s; }
+    .fade-up-delay-2 { transition-delay: .2s; }
+    .fade-up-delay-3 { transition-delay: .3s; }
+    .fade-up-delay-4 { transition-delay: .4s; }
+    .fade-up-delay-5 { transition-delay: .5s; }
+
+    /* ════════════════════════════════
+       NAVIGATION
+    ════════════════════════════════ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 0;
+      transition: background var(--transition), box-shadow var(--transition), padding var(--transition);
+    }
+    .nav.scrolled {
+      background: rgba(15,23,42,.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 2px 20px rgba(0,0,0,.25);
+      padding: 12px 0;
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .nav-logo { font-size: 1.35rem; font-weight: 900; color: var(--white); letter-spacing: -.02em; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: .95rem; font-weight: 500; color: rgba(255,255,255,.85); transition: color var(--transition); }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta { padding: 10px 22px; font-size: .9rem; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .nav-hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: var(--transition); }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .nav-mobile { display: none; position: fixed; inset: 0; background: var(--dark); z-index: 99; padding: 100px 32px 40px; flex-direction: column; gap: 32px; }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a { font-size: 1.4rem; font-weight: 700; color: var(--white); border-bottom: 1px solid rgba(255,255,255,.1); padding-bottom: 20px; }
+    .nav-mobile .btn { align-self: flex-start; margin-top: 8px; }
+
+    /* ════════════════════════════════
+       HERO
+    ════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #0F172A 0%, #0C2D4A 45%, #0D4A6B 75%, #0E6A8F 100%);
+      display: flex; align-items: center;
+      padding: 120px 0 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg-pattern { position: absolute; inset: 0; pointer-events: none; opacity: .18; }
+    .hero-content { position: relative; z-index: 1; max-width: 760px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(14,165,233,.2); border: 1px solid rgba(14,165,233,.4); border-radius: 50px; padding: 7px 16px; font-size: .85rem; font-weight: 600; color: #7DD3FC; margin-bottom: 28px; }
+    .hero-badge svg { flex-shrink: 0; }
+    .hero h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); font-weight: 900; line-height: 1.1; color: var(--white); margin-bottom: 24px; letter-spacing: -.02em; }
+    .hero h1 .accent { color: var(--accent); }
+    .hero-sub { font-size: clamp(1rem, 2.5vw, 1.2rem); color: rgba(255,255,255,.75); max-width: 560px; margin-bottom: 40px; line-height: 1.7; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 56px; }
+    .hero-trust { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,.12); }
+    .trust-item { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,.8); font-size: .9rem; font-weight: 500; }
+    .trust-item svg { color: var(--accent); flex-shrink: 0; }
+    .trust-divider { width: 1px; height: 20px; background: rgba(255,255,255,.2); }
+
+    /* ════════════════════════════════
+       HOW IT WORKS
+    ════════════════════════════════ */
+    .how { background: var(--bg); }
+    .steps { display: grid; grid-template-columns: 1fr; gap: 32px; position: relative; }
+    .step { background: var(--white); border-radius: var(--radius-lg); padding: 40px 36px; position: relative; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,.06); transition: box-shadow var(--transition), transform var(--transition); }
+    .step:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+    .step-num { position: absolute; top: -16px; left: 36px; background: var(--primary); color: var(--white); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .85rem; font-weight: 800; box-shadow: 0 4px 12px rgba(14,165,233,.4); }
+    .step-icon { width: 64px; height: 64px; background: linear-gradient(135deg, rgba(14,165,233,.12), rgba(14,165,233,.06)); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--primary); }
+    .step h3 { font-size: 1.2rem; font-weight: 800; color: var(--dark); margin-bottom: 10px; }
+    .step p { font-size: .95rem; color: var(--mid); line-height: 1.7; }
+    .step-arrow { display: none; }
+
+    /* ════════════════════════════════
+       SERVICES
+    ════════════════════════════════ */
+    .services { background: var(--white); }
+    .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .service-card { background: var(--bg); border-radius: var(--radius); padding: 28px 24px; text-align: center; border: 1px solid rgba(0,0,0,.06); transition: all var(--transition); cursor: default; }
+    .service-card:hover { background: var(--white); box-shadow: var(--shadow); transform: translateY(-3px); border-color: rgba(14,165,233,.25); }
+    .service-card:hover .service-icon { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: var(--white); }
+    .service-icon { width: 60px; height: 60px; border-radius: 14px; background: rgba(14,165,233,.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: var(--primary); transition: var(--transition); }
+    .service-card h3 { font-size: .95rem; font-weight: 700; color: var(--dark); }
+
+    /* ════════════════════════════════
+       USPs
+    ════════════════════════════════ */
+    .usps { background: var(--bg); }
+    .usps-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    .usp-card { background: var(--white); border-radius: var(--radius); padding: 32px 28px; display: flex; gap: 20px; align-items: flex-start; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,.06); transition: all var(--transition); }
+    .usp-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+    .usp-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .usp-icon.blue { background: rgba(14,165,233,.12); color: var(--primary); }
+    .usp-icon.orange { background: rgba(249,115,22,.12); color: var(--accent); }
+    .usp-icon.green { background: rgba(34,197,94,.12); color: #16A34A; }
+    .usp-icon.purple { background: rgba(139,92,246,.12); color: #7C3AED; }
+    .usp-body h3 { font-size: 1.05rem; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+    .usp-body p { font-size: .9rem; color: var(--mid); line-height: 1.6; }
+
+    /* ════════════════════════════════
+       FÜR HANDWERKER
+    ════════════════════════════════ */
+    .handwerker {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--dark-2) 100%);
+      position: relative; overflow: hidden;
+    }
+    .handwerker-bg { position: absolute; inset: 0; pointer-events: none; }
+    .handwerker-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr; gap: 48px; align-items: center; }
+    .handwerker-content .section-label { background: rgba(249,115,22,.15); color: #FB923C; }
+    .handwerker-content .section-title { color: var(--white); }
+    .handwerker-content .section-sub { color: rgba(255,255,255,.65); max-width: 500px; }
+    .handwerker-list { display: flex; flex-direction: column; gap: 16px; margin: 32px 0 40px; }
+    .handwerker-item { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,.85); font-size: .95rem; font-weight: 500; }
+    .handwerker-item svg { color: #4ADE80; flex-shrink: 0; }
+    .handwerker-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: var(--radius-lg); padding: 40px; backdrop-filter: blur(8px); }
+    .handwerker-card h4 { font-size: 1rem; font-weight: 700; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 20px; }
+    .handwerker-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--white); line-height: 1; margin-bottom: 6px; }
+    .stat-num span { color: var(--accent); }
+    .stat-label { font-size: .82rem; color: rgba(255,255,255,.5); font-weight: 500; }
+
+    /* ════════════════════════════════
+       KONTAKT
+    ════════════════════════════════ */
+    .contact { background: var(--white); }
+    .contact-grid { display: grid; grid-template-columns: 1fr; gap: 48px; }
+    .contact-info h3 { font-size: 1.35rem; font-weight: 800; margin-bottom: 24px; color: var(--dark); }
+    .contact-detail { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+    .contact-detail-icon { width: 44px; height: 44px; background: rgba(14,165,233,.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary); flex-shrink: 0; }
+    .contact-detail-text p:first-child { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--mid); margin-bottom: 2px; }
+    .contact-detail-text p:last-child { font-size: .95rem; font-weight: 600; color: var(--dark); }
+    .contact-map { background: linear-gradient(135deg, #e2f0fb, #dbeafe); border-radius: var(--radius-lg); height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--primary-dark); font-weight: 600; font-size: .9rem; border: 2px solid rgba(14,165,233,.15); margin-top: 28px; }
+    .contact-form { background: var(--bg); border-radius: var(--radius-lg); padding: 36px; }
+    .contact-form h3 { font-size: 1.35rem; font-weight: 800; margin-bottom: 24px; color: var(--dark); }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: .85rem; font-weight: 600; color: var(--dark-3); margin-bottom: 6px; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; background: var(--white); border: 1.5px solid var(--light); border-radius: 10px; padding: 12px 16px; font-family: inherit; font-size: .95rem; color: var(--dark); transition: border-color var(--transition), box-shadow var(--transition); outline: none; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(14,165,233,.12); }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-row { display: grid; grid-template-columns: 1fr; gap: 18px; }
+    .form-success { display: none; background: rgba(34,197,94,.1); border: 1.5px solid rgba(34,197,94,.3); border-radius: 10px; padding: 16px 20px; color: #15803D; font-size: .95rem; font-weight: 600; text-align: center; margin-top: 16px; }
+    .form-success.show { display: block; }
+
+    /* ════════════════════════════════
+       FOOTER
+    ════════════════════════════════ */
+    .footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 60px 0 0; }
+    .footer-grid { display: grid; grid-template-columns: 1fr; gap: 40px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .footer-brand .nav-logo { font-size: 1.4rem; margin-bottom: 12px; }
+    .footer-brand p { font-size: .9rem; line-height: 1.7; max-width: 300px; }
+    .footer-col h4 { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--white); margin-bottom: 16px; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul a { font-size: .9rem; transition: color var(--transition); }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-contact-item { display: flex; align-items: center; gap: 10px; font-size: .9rem; margin-bottom: 10px; }
+    .footer-contact-item svg { color: var(--primary); flex-shrink: 0; }
+    .footer-bottom { padding: 20px 0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; font-size: .82rem; }
+    .footer-bottom-links { display: flex; gap: 20px; }
+    .footer-bottom-links a:hover { color: var(--white); }
+    .footer-stars { display: flex; align-items: center; gap: 6px; }
+    .star { color: #FBBF24; font-size: 1rem; }
+
+    /* ════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════ */
+    @media (min-width: 640px) {
+      .steps { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+      .step-arrow { display: block; }
+      .services-grid { grid-template-columns: repeat(3, 1fr); }
+      .usps-grid { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 900px) {
+      .nav-links { display: flex; }
+      .nav-cta { display: inline-flex; }
+      .nav-hamburger { display: none !important; }
+      .services-grid { grid-template-columns: repeat(4, 1fr); }
+      .usps-grid { grid-template-columns: repeat(3, 1fr); }
+      .handwerker-inner { grid-template-columns: 1fr 1fr; }
+      .contact-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
+      .section { padding: 100px 0; }
+    }
+
+    @media (max-width: 899px) {
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     NAVIGATION
+══════════════════════════════════ -->
+<nav class="nav" id="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">Auftrags<span>Glück</span></a>
+      <ul class="nav-links">
+        <li><a href="#leistungen">Leistungen</a></li>
+        <li><a href="#wie-es-funktioniert">So funktioniert's</a></li>
+        <li><a href="#handwerker">Für Handwerker</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+      </ul>
+      <a href="#kontakt" class="btn btn-primary nav-cta">Auftrag einstellen</a>
+      <div class="nav-hamburger" id="hamburger" aria-label="Menü öffnen" role="button" tabindex="0">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="nav-mobile" id="mobileMenu">
+  <a href="#leistungen" class="mobile-link">Leistungen</a>
+  <a href="#wie-es-funktioniert" class="mobile-link">So funktioniert's</a>
+  <a href="#handwerker" class="mobile-link">Für Handwerker</a>
+  <a href="#kontakt" class="mobile-link">Kontakt</a>
+  <a href="#kontakt" class="btn btn-primary btn-lg">Jetzt Auftrag einstellen →</a>
+</div>
+
+<!-- ══════════════════════════════════
+     HERO
+══════════════════════════════════ -->
+<section class="hero" id="hero">
+  <!-- Background pattern -->
+  <svg class="hero-bg-pattern" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+    <defs>
+      <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+        <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/>
+      </pattern>
+      <radialGradient id="fade" cx="50%" cy="50%" r="70%">
+        <stop offset="0%" stop-color="white" stop-opacity="0"/>
+        <stop offset="100%" stop-color="black" stop-opacity="1"/>
+      </radialGradient>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#grid)"/>
+    <rect width="100%" height="100%" fill="url(#fade)" style="mix-blend-mode:multiply"/>
+  </svg>
+
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge fade-up">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Deutschlandweit &nbsp;·&nbsp; 5,0 ★ Google-Bewertung
+      </div>
+      <h1 class="fade-up fade-up-delay-1">
+        Ihr Auftrag.<br/>
+        Geprüfte Handwerker.<br/>
+        <span class="accent">In Stunden.</span>
+      </h1>
+      <p class="hero-sub fade-up fade-up-delay-2">
+        AuftragsGlück verbindet Sie kostenlos und ohne Aufwand mit verifizierten Handwerkern und Dienstleistern – transparent, schnell und zuverlässig.
+      </p>
+      <div class="hero-actions fade-up fade-up-delay-3">
+        <a href="#kontakt" class="btn btn-primary btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          Jetzt Auftrag kostenlos einstellen
+        </a>
+        <a href="#wie-es-funktioniert" class="btn btn-secondary btn-lg">So funktioniert's</a>
+      </div>
+      <div class="hero-trust fade-up fade-up-delay-4">
+        <div class="trust-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          5,0 Google
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Geprüfte Handwerker
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          100% Kostenlos
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Angebote in 2–4 Std.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     WIE ES FUNKTIONIERT
+══════════════════════════════════ -->
+<section class="how section" id="wie-es-funktioniert">
+  <div class="container">
+    <div class="section-header center">
+      <span class="section-label fade-up">Einfach & Schnell</span>
+      <h2 class="section-title fade-up fade-up-delay-1">In 3 Schritten zum<br/>Wunschhandwerker</h2>
+      <p class="section-sub fade-up fade-up-delay-2">Kein Papierkram, keine langen Wartezeiten. Einfach Auftrag einstellen und innerhalb von Stunden passende Angebote erhalten.</p>
+    </div>
+
+    <div class="steps">
+      <!-- Step 1 -->
+      <div class="step fade-up fade-up-delay-1">
+        <div class="step-num">1</div>
+        <div class="step-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        </div>
+        <h3>Auftrag kostenlos einstellen</h3>
+        <p>Beschreiben Sie Ihr Vorhaben in wenigen Sätzen – Ort, Art der Arbeit und Ihre Kontaktdaten. Fertig in unter 2 Minuten.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step fade-up fade-up-delay-2">
+        <div class="step-num">2</div>
+        <div class="step-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+        </div>
+        <h3>Angebote erhalten</h3>
+        <p>Passende, geprüfte Handwerker aus Ihrer Region melden sich direkt bei Ihnen – in der Regel innerhalb von 2 bis 4 Stunden.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step fade-up fade-up-delay-3">
+        <div class="step-num">3</div>
+        <div class="step-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3>Beauftragen & loslegen</h3>
+        <p>Wählen Sie das beste Angebot und legen Sie gemeinsam mit dem Handwerker einen Termin fest. Kein Stress, kein Risiko.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     LEISTUNGEN
+══════════════════════════════════ -->
+<section class="services section" id="leistungen">
+  <div class="container">
+    <div class="section-header center">
+      <span class="section-label fade-up">Unsere Leistungen</span>
+      <h2 class="section-title fade-up fade-up-delay-1">Was können wir für<br/>Sie erledigen?</h2>
+      <p class="section-sub fade-up fade-up-delay-2">Von Renovierung bis Gartenpflege – unser Netzwerk aus geprüften Fachbetrieben deckt alle gängigen Handwerks- und Serviceleistungen ab.</p>
+    </div>
+
+    <div class="services-grid">
+      <!-- Renovierung -->
+      <div class="service-card fade-up fade-up-delay-1">
+        <div class="service-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>Renovierung</h3>
+      </div>
+      <!-- Umzug -->
+      <div class="service-card fade-up fade-up-delay-2">
+        <div class="service-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <h3>Umzug</h3>
+      </div>
+      <!-- Entrümpelung -->
+      <div class="service-card fade-up fade-up-delay-3">
+        <div class="service-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+        </div>
+        <h3>Entrümpelung</h3>
+      </div>
+      <!-- Malerarbeiten -->
+      <div class="service-card fade-up fade-up-delay-4">
+        <div class="service-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19a2 2 0 002 2h14a2 2 0 002-2V6.5c0-.48-.17-.93-.46-1.27z"/><polyline points="3 7 12 13 21 7"/></svg>
+        </div>
+        <h3>Malerarbeiten</h3>
+      </div>
+      <!-- Sanitär -->
+      <div class="service-card fade-up fade-up-delay-1">
+        <div class="service-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Sanitär</h3>
+      </div>
+      <!-- Gartenpflege -->
+      <div class="service-card fade-up fade-up-delay-2">
+        <div class="service-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12C12 12 7 10 5 6c3 0 7 6 7 6zM12 12c0 0 5-2 7-6-3 0-7 6-7 6z"/><path d="M5 3s3 1 4 5M19 3s-3 1-4 5"/></svg>
+        </div>
+        <h3>Gartenpflege</h3>
+      </div>
+      <!-- Küchenmontage -->
+      <div class="service-card fade-up fade-up-delay-3">
+        <div class="service-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        </div>
+        <h3>Küchenmontage</h3>
+      </div>
+      <!-- Elektro -->
+      <div class="service-card fade-up fade-up-delay-4">
+        <div class="service-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h3>Elektro</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     WARUM AUFTRAGSGLÜCK
+══════════════════════════════════ -->
+<section class="usps section" id="usps">
+  <div class="container">
+    <div class="section-header center">
+      <span class="section-label fade-up">Ihre Vorteile</span>
+      <h2 class="section-title fade-up fade-up-delay-1">Warum AuftragsGlück?</h2>
+      <p class="section-sub fade-up fade-up-delay-2">Wir setzen auf Transparenz, Qualität und Einfachheit – damit Sie sich auf das Wesentliche konzentrieren können.</p>
+    </div>
+
+    <div class="usps-grid">
+      <div class="usp-card fade-up fade-up-delay-1">
+        <div class="usp-icon green">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div class="usp-body">
+          <h3>100% Kostenlos für Auftraggeber</h3>
+          <p>Sie zahlen absolut nichts – keine Vermittlungsgebühr, keine versteckten Kosten. AuftragsGlück ist für Auftraggeber dauerhaft kostenlos.</p>
+        </div>
+      </div>
+
+      <div class="usp-card fade-up fade-up-delay-2">
+        <div class="usp-icon blue">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="usp-body">
+          <h3>Geprüfte & verifizierte Handwerker</h3>
+          <p>Jeder Dienstleister wird vor der Aufnahme ins Netzwerk sorgfältig geprüft – für Ihre Sicherheit und Ihre Zufriedenheit.</p>
+        </div>
+      </div>
+
+      <div class="usp-card fade-up fade-up-delay-3">
+        <div class="usp-icon orange">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="usp-body">
+          <h3>Angebote in 2–4 Stunden</h3>
+          <p>Keine tagelange Wartezeit. Unser Netzwerk reagiert schnell – passende Angebote erhalten Sie oft noch am selben Tag.</p>
+        </div>
+      </div>
+
+      <div class="usp-card fade-up fade-up-delay-1">
+        <div class="usp-icon purple">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div class="usp-body">
+          <h3>Kein Abo, keine Grundgebühr</h3>
+          <p>Auch für Handwerker gilt: keine monatlichen Kosten, kein Abo-Zwang. Zahlen Sie nur, wenn Sie erfolgreich einen Auftrag erhalten.</p>
+        </div>
+      </div>
+
+      <div class="usp-card fade-up fade-up-delay-2">
+        <div class="usp-icon blue">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div class="usp-body">
+          <h3>Ehrlich &amp; Transparent</h3>
+          <p>Wir zeigen Ihnen klare Preise, echte Bewertungen und vollständige Profilinformationen – ohne Überraschungen.</p>
+        </div>
+      </div>
+
+      <div class="usp-card fade-up fade-up-delay-3">
+        <div class="usp-icon green">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <div class="usp-body">
+          <h3>Deutschlandweit verfügbar</h3>
+          <p>Ob in Lüdenscheid, Berlin oder München – unser wachsendes Handwerkernetzwerk ist in ganz Deutschland für Sie da.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     FÜR HANDWERKER
+══════════════════════════════════ -->
+<section class="handwerker section" id="handwerker">
+  <!-- Decorative circles -->
+  <div class="handwerker-bg" aria-hidden="true">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="90%" cy="20%" r="300" fill="rgba(14,165,233,0.05)"/>
+      <circle cx="5%" cy="80%" r="200" fill="rgba(249,115,22,0.07)"/>
+    </svg>
+  </div>
+
+  <div class="container">
+    <div class="handwerker-inner">
+      <div class="handwerker-content fade-up">
+        <span class="section-label">Für Betriebe</span>
+        <h2 class="section-title">Sie sind Handwerker<br/>oder Dienstleister?</h2>
+        <p class="section-sub">Wachsen Sie mit AuftragsGlück. Erhalten Sie qualifizierte Aufträge aus Ihrer Region – ganz ohne teures Abo oder monatliche Gebühren.</p>
+
+        <ul class="handwerker-list">
+          <li class="handwerker-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            Kostenlose Registrierung – in 5 Minuten startklar
+          </li>
+          <li class="handwerker-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            Kein Abo, keine monatliche Grundgebühr
+          </li>
+          <li class="handwerker-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            Direktkontakt zu Auftraggebern aus Ihrer Region
+          </li>
+          <li class="handwerker-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            Profil-Seite mit Bewertungen für mehr Vertrauen
+          </li>
+          <li class="handwerker-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            Auftragsstrom auch in ruhigen Monaten sichern
+          </li>
+        </ul>
+
+        <a href="#kontakt" class="btn btn-primary btn-lg">
+          Jetzt kostenlos registrieren →
+        </a>
+      </div>
+
+      <div class="handwerker-card fade-up fade-up-delay-2">
+        <h4>Unser Netzwerk wächst</h4>
+        <div class="handwerker-stats">
+          <div class="stat">
+            <div class="stat-num">5,0<span>★</span></div>
+            <div class="stat-label">Google-Bewertung</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num"><span>∞</span></div>
+            <div class="stat-label">Wachstumspotenzial</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">0<span>€</span></div>
+            <div class="stat-label">Grundgebühr</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">2–4<span>h</span></div>
+            <div class="stat-label">Reaktionszeit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     KONTAKT
+══════════════════════════════════ -->
+<section class="contact section" id="kontakt">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label fade-up">Kontakt</span>
+      <h2 class="section-title fade-up fade-up-delay-1">Jetzt Ihren Auftrag einstellen</h2>
+      <p class="section-sub fade-up fade-up-delay-2">Kostenlos, unverbindlich und in wenigen Minuten. Wir melden uns umgehend bei Ihnen.</p>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Info -->
+      <div class="fade-up">
+        <h3>Direkt erreichbar</h3>
+
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .93h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.34-1.34a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7a2 2 0 011.72 2.02z"/></svg>
+          </div>
+          <div class="contact-detail-text">
+            <p>Telefon</p>
+            <p><a href="tel:+491775832251">+49 177 5832251</a></p>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="contact-detail-text">
+            <p>Anschrift</p>
+            <p>Körnerstraße 6, 58507 Lüdenscheid</p>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="contact-detail-text">
+            <p>Erreichbarkeit</p>
+            <p>Mo–Fr 08:00–18:00 Uhr</p>
+          </div>
+        </div>
+
+        <!-- Map placeholder -->
+        <div class="contact-map">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Körnerstraße 6 · 58507 Lüdenscheid</span>
+          <span style="font-size:.8rem;color:#64748B;">Karte öffnen in Google Maps</span>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="contact-form fade-up fade-up-delay-2">
+        <h3>Auftrag einstellen</h3>
+        <form id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Ihr Name *</label>
+              <input type="text" id="name" name="name" placeholder="Max Mustermann" required />
+            </div>
+            <div class="form-group">
+              <label for="phone">Telefonnummer *</label>
+              <input type="tel" id="phone" name="phone" placeholder="+49 176 ..." required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">E-Mail-Adresse *</label>
+            <input type="email" id="email" name="email" placeholder="max@beispiel.de" required />
+          </div>
+          <div class="form-group">
+            <label for="leistung">Art der Leistung</label>
+            <select id="leistung" name="leistung">
+              <option value="">Bitte wählen …</option>
+              <option>Renovierung</option>
+              <option>Umzug</option>
+              <option>Entrümpelung</option>
+              <option>Malerarbeiten</option>
+              <option>Sanitär</option>
+              <option>Gartenpflege</option>
+              <option>Küchenmontage</option>
+              <option>Elektro</option>
+              <option>Sonstiges</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="nachricht">Beschreiben Sie Ihren Auftrag *</label>
+            <textarea id="nachricht" name="nachricht" placeholder="Was soll gemacht werden? Wo? Bis wann?" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Auftrag kostenlos absenden
+          </button>
+          <div class="form-success" id="formSuccess">
+            ✓ Vielen Dank! Wir haben Ihren Auftrag erhalten und melden uns so schnell wie möglich bei Ihnen.
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     FOOTER
+══════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <div class="nav-logo">Auftrags<span>Glück</span></div>
+        <p>Die Plattform für geprüfte Handwerker und Dienstleister – kostenlos, transparent und deutschlandweit.</p>
+        <div class="footer-stars" style="margin-top:16px;">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          <span style="color:rgba(255,255,255,.6);font-size:.85rem;margin-left:6px;">5,0 · Google Bewertungen</span>
+        </div>
+      </div>
+
+      <!-- Leistungen -->
+      <div class="footer-col">
+        <h4>Leistungen</h4>
+        <ul>
+          <li><a href="#leistungen">Renovierung</a></li>
+          <li><a href="#leistungen">Umzug</a></li>
+          <li><a href="#leistungen">Malerarbeiten</a></li>
+          <li><a href="#leistungen">Sanitär</a></li>
+          <li><a href="#leistungen">Gartenpflege</a></li>
+          <li><a href="#leistungen">Elektro</a></li>
+        </ul>
+      </div>
+
+      <!-- Unternehmen -->
+      <div class="footer-col">
+        <h4>Unternehmen</h4>
+        <ul>
+          <li><a href="#wie-es-funktioniert">So funktioniert's</a></li>
+          <li><a href="#handwerker">Für Handwerker</a></li>
+          <li><a href="#usps">Über uns</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </div>
+
+      <!-- Kontakt -->
+      <div class="footer-col">
+        <h4>Kontakt</h4>
+        <div class="footer-contact-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Körnerstraße 6<br/>58507 Lüdenscheid
+        </div>
+        <div class="footer-contact-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .93h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.34-1.34a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7a2 2 0 011.72 2.02z"/></svg>
+          <a href="tel:+491775832251">+49 177 5832251</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2025 AuftragsGlück · Alle Rechte vorbehalten</span>
+      <div class="footer-bottom-links">
+        <a href="#">Impressum</a>
+        <a href="#">Datenschutz</a>
+        <a href="#">AGB</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Scroll-based nav styling
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  // ── Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+  });
+  document.querySelectorAll('.mobile-link, .nav-mobile .btn').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // ── Scroll-triggered animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // ── Make hero elements visible immediately (they're above the fold)
+  document.querySelectorAll('.hero .fade-up').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 100);
+  });
+
+  // ── Contact form
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const nachricht = document.getElementById('nachricht').value.trim();
+
+    if (!name || !phone || !email || !nachricht) {
+      alert('Bitte füllen Sie alle Pflichtfelder aus.');
+      return;
+    }
+
+    const btn = this.querySelector('button[type="submit"]');
+    btn.textContent = 'Wird gesendet …';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      document.getElementById('formSuccess').classList.add('show');
+      this.reset();
+      btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Auftrag kostenlos absenden`;
+      btn.disabled = false;
+    }, 800);
+  });
+
+  // ── Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 80;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
